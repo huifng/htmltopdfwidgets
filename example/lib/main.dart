@@ -6,10 +6,10 @@ void main() {
   createDocument();
 }
 
-const htmlText = '''<h1>AppFlowyEditor</h1>
+String htmlText = '''<h1>AppFlowyEditor</h1>
 <h2>👋 <strong>Welcome to</strong> <strong><em><a href="appflowy.io">AppFlowy Editor</a></em></strong></h2>
   <p>AppFlowy Editor is a <strong>highly customizable</strong> <em>rich-text editor</em></p>
-<hr />
+<hr style="border-style:dashed;color:#9BBA3A;height:1;thickness:1"/>
 <p><u>Here</u> is an example <del>your</del> you can give a try</p>
 <br>
 <span style="font-weight: bold;background-color: #cccccc;font-style: italic;">Span element</span>
@@ -53,6 +53,7 @@ createDocument() async {
   const filePath = 'example.pdf';
   final file = File(filePath);
   final newpdf = Document();
+  htmlText = '<div style="font-size:30">line1</div><hr style="height:10"/><div style="font-size:18">line2</div>';
   final List<Widget> widgets = await HTMLToPdf().convert(
     htmlText,
   );
