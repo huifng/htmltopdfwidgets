@@ -53,7 +53,7 @@ createDocument() async {
   const filePath = 'example.pdf';
   final file = File(filePath);
   final newpdf = Document();
-  htmlText = '<div style="font-size:30">line1</div><hr style="height:10"/><div style="font-size:18">line2</div>';
+  htmlText = '<div style="font-size:30">line1</div><hr style="height:10px;border-top:1px dashed #f22"/><div style="font-size:18">line2</div>';
   final List<Widget> widgets = await HTMLToPdf().convert(
     htmlText,
   );

@@ -423,7 +423,6 @@ class WidgetsHTMLDecoder {
   }
 
   ///check if children contains the <p> <li> or any other tag
-
   Future<List<Widget>> _parseTableDataElementsData(
       dom.Element element, TextStyle baseTextStyle) async {
     final List<Widget> delta = [];
@@ -624,7 +623,7 @@ class WidgetsHTMLDecoder {
 
       Map<String,String> cssMap = _cssStringToMap(style);
       if(cssMap.containsKey('height')){
-        height = double.parse(cssMap['height'] ?? '0.5');
+        height = double.parse(cssMap['height']?.replaceAll(RegExp(r'px'), '') ?? '0.5');
       }
 
       if(cssMap.containsKey('thickness')){
@@ -642,6 +641,23 @@ class WidgetsHTMLDecoder {
         }
         if(border.toLowerCase() == 'dotted'){
           borderStyle = BorderStyle.dotted;
+        }
+      }
+
+      if(cssMap.containsKey('border-top')){
+        String borderTop = cssMap['border-top'] ?? '';
+        var splits = borderTop.trim().split(' ');
+        if(splits.length == 3){
+          thickness = double.parse(splits[0].replaceAll('px', ''));
+          
+          if(splits[1].toLowerCase() == 'dashed'){
+            borderStyle = BorderStyle(pattern: <int>[3, 1]);
+          }
+          if(splits[1].toLowerCase() == 'dotted'){
+            borderStyle = BorderStyle.dotted;
+          }
+
+          color = PdfColor.fromHex(splits[2].trim());
         }
       }
 
