@@ -67,6 +67,7 @@ class HTMLTags {
     HTMLTags.image,
     HTMLTags.section,
     HTMLTags.label,
+    HTMLTags.divider,
   ];
 }
 

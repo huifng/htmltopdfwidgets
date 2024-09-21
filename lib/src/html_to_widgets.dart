@@ -242,6 +242,10 @@ class WidgetsHTMLDecoder {
         return [await _parseImageElement(element)];
 
       /// Handle the line break tag
+      
+      /// Handle the divider tag
+      case HTMLTags.divider:
+        return [await _parseDividerElement(element)];
 
       /// if no special element is found it treated as simple parahgraph
       default:
@@ -609,6 +613,58 @@ class WidgetsHTMLDecoder {
     }
   }
 
+  /// Function to parse an divider element and return Divider widget
+  Future<Widget> _parseDividerElement(dom.Element element) async {
+    final style = element.attributes["style"];
+    try {
+      double? height = 0.5;
+      double? thickness = 1;
+      PdfColor? color = PdfColors.black;
+      BorderStyle? borderStyle = BorderStyle.solid;
+
+      Map<String,String> cssMap = _cssStringToMap(style);
+      if(cssMap.containsKey('height')){
+        height = double.parse(cssMap['height'] ?? '0.5');
+      }
+
+      if(cssMap.containsKey('thickness')){
+        thickness = double.parse(cssMap['thickness'] ?? '1');
+      }
+
+      if(cssMap.containsKey('color')){
+        color = PdfColor.fromHex(cssMap['color'] ?? '#000');
+      }
+
+      if(cssMap.containsKey('border-style')){
+        String border = cssMap['border-style'] ?? 'solid';
+        if(border.toLowerCase() == 'dashed'){
+          borderStyle = BorderStyle(pattern: <int>[3, 1]);
+        }
+        if(border.toLowerCase() == 'dotted'){
+          borderStyle = BorderStyle.dotted;
+        }
+      }
+
+      return Divider(
+        height: height,
+        thickness: thickness,
+        indent: 0,
+        endIndent: 0,
+        color: color,
+        borderStyle: borderStyle
+      );
+    } catch (e) {
+      return Divider(
+        height: 0.5,
+        thickness: 10,
+        indent: 0,
+        endIndent: 0,
+        color: PdfColors.amber500,
+        borderStyle: BorderStyle.dotted
+      );
+    }
+  }
+
   /// Function to download and save an image from a URL
   Future<Uint8List> _saveImage(String url) async {
     try {
@@ -743,6 +799,15 @@ class WidgetsHTMLDecoder {
               .copyWith(fontWeight: FontWeight.bold)
               .merge(customStyles.boldStyle);
         }
+      }
+    }
+
+    //get font size
+    final fontSizeStr = cssMap["font-size"];
+    if(fontSizeStr != null) {
+      double? fontSize = double.tryParse(fontSizeStr);
+      if(fontSize != null && fontSize > 0){
+        style = style.copyWith(fontSize: fontSize);
       }
     }
 
