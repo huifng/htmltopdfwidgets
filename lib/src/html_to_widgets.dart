@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:html/dom.dart' as dom;
@@ -587,9 +588,11 @@ class WidgetsHTMLDecoder {
   /// Function to parse an image element and download image as bytes  and return an Image widget
   Future<Widget> _parseImageElement(dom.Element element) async {
     final src = element.attributes["src"];
+    final width = element.attributes["width"];
+    final height = element.attributes["height"];
     try {
       if (src != null) {
-        if (src.startsWith("data:image/")) {
+        if (src.startsWith("data:image/png")) {
           // To handle a case if someone added a space after base64 string
           final List<String> components = src.split(",");
 
@@ -597,7 +600,24 @@ class WidgetsHTMLDecoder {
             var base64Encoded = components.last;
             Uint8List listData = base64Decode(base64Encoded);
             return Image(MemoryImage(listData),
-                alignment: customStyles.imageAlignment);
+                alignment: customStyles.imageAlignment,
+                width: width != null ? double.parse(width) : null,
+                height: height != null ? double.parse(height) : null
+              );
+          }
+          return Text("");
+        }
+
+        if (src.startsWith("data:image/svg+xml")) {
+          final List<String> components = src.split(",");
+
+          if (components.length > 1) {
+            var base64Encoded = components.last;
+            Uint8List listData = base64Decode(base64Encoded);
+            return SvgImage(svg: utf8.decode(listData),
+              width: width != null ? double.parse(width) : null,
+              height: height != null ? double.parse(height) : null
+            );
           }
           return Text("");
         }
