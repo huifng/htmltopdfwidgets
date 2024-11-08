@@ -896,8 +896,7 @@ class WidgetsHTMLDecoder {
       case "center":
         return TextAlign.center;
       case "left":
-        return TextAlign.right;
-
+        return TextAlign.left;
       case "justify":
         return TextAlign.justify;
 

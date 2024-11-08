@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:htmltopdfwidgets/htmltopdfwidgets.dart';
 
-void main() {
+void main(){
   createDocument();
 }
 
@@ -50,6 +50,22 @@ String htmlText = '''<h1>AppFlowyEditor</h1>
   <label for="option2">Option 2</label>
   <input type="checkbox" id="option3"> 
   <label for="option3">Option 3</label>
+  <div>this is a testing, 这是一个测试</div>
+
+  <div style="text-align:left;font-size:30">this is a testing, 这是一个测试</div>
+  <div style="text-align:center">this is a testing, 这是一个测试</div>
+  <div style="text-align:right">this is a testing, 这是一个测试</div>
+  <div style="text-align:justify">this is a testing, 这是一个测试</div>
+  
+  <div><span style="text-align:left">this is a testing, 这是一个测试</span></div>
+  <div><span style="text-align:center">this is a testing, 这是一个测试</span></div>
+  <div><span style="text-align:right">this is a testing, 这是一个测试</span></div>
+  <div><span style="text-align:justify">this is a testing, 这是一个测试</span></div>
+
+  <div>this is normal string</div>
+  <div><b>this is bold string</b></div>
+  <div>this is normal string</div>
+  <div><u>this is bold string</u></div>
   ''';
 
 createDocument() async {
@@ -57,8 +73,10 @@ createDocument() async {
   final file = File(filePath);
   final newpdf = Document();
   // htmlText = '<div style="font-size:30">line1</div><hr style="height:10px;border-top:1px dashed #f22"/><div style="font-size:18">line2</div>';
+  // Font font = await fontFromAssetBundle('/Volumes/Data/workspace/huifng/redpay/pos/03build/flutter_food/assets/fonts/AlibabaPuHuiTi-2-55-Regular.ttf');
   final List<Widget> widgets = await HTMLToPdf().convert(
     htmlText,
+    // fontFallback: [font]
   );
 
   newpdf.addPage(MultiPage(
